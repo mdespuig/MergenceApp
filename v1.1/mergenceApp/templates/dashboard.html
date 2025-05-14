@@ -24,7 +24,7 @@
         <div class="profile-dropdown">
             <button class="profile-btn">{{ user.username }} ▾</button>
             <div class="dropdown-content">
-                <a href="#">View Profile</a>
+                <a href="{% url 'report' %}">View Profile</a>
                 <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">Logout</button>

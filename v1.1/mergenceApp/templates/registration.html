@@ -1,0 +1,43 @@
+{% load static %}
+<head>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/loginStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Mergence</title>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Mergence</h1>
+    <p class="tagline">The Lifeline You Can Count On</p>
+
+    <div class="form-box">
+      <h2>Create an account</h2>
+      <p>Registration</p>
+
+      <a href="{% url 'regForm' %}" class="btn black-btn">Sign up</a>
+
+      <div class="divider"><span>or continue with</span></div>
+
+      <button class="btn googleButton">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="icon" />
+        Google
+      </button>
+
+      <button class="btn fbButton">
+        <img src="https://www.svgrepo.com/show/448224/facebook.svg" alt="Facebook" class="icon" />
+        Facebook
+      </button>
+
+      <p class="terms">
+        By clicking continue, you agree to our
+        <span>Terms of Service</span> and
+        <span>Privacy Policy</span>
+        <br/>
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+      </p>
+    </div>
+  </div>
+</body>

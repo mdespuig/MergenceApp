@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mergence - Tracking</title>
+    <link rel="stylesheet" href="{% static 'css/ticket.css' %}" />
+    <!-- Font imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- JavaScript file -->
+    <script src="{% static 'js/notifications.js' %}" defer></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+            <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        </div>
+        
+        <div class="header-right">
+          <nav class="main-nav">
+            <a href="{% url 'admin_ticket' %}" class="nav-link">Debug</a>
+            <a href="{% url 'report' %}" class="nav-link">Report</a>
+            <a href="#" class="nav-link">Become a Partner</a>
+            <a href="{% url 'ticket' %}" class="nav-link">Check Ticket</a>
+          </nav>
+          
+        {% if user.is_authenticated %}          
+        <div class="profile">
+          <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+              <a href="{% url 'profile' %}">View Profile</a>
+              <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+          <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+          <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+        </div>
+      </header>
+      
+      <div class="main-content">        
+        <div class="content">
+          <div class="tracking-form">
+            <h1 class="tracking-title">Mergence</h1>
+            <p class="tracking-subtitle">The Lifeline You Can Count On</p>
+            
+            <div class="tracking-input-container">
+              <h2 class="tracking-form-title">Tracking System</h2>
+              <form method= get action="{% url 'ticket' %}">
+                <div class="tracking-form-inputs">
+                  <input class="tracking-input" name="code" type="text" placeholder="MG-250001A" value="{{ ticket_code|default:'' }}">
+                  <button class="tracking-button" type="submit">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <div class="timeline-container">
+            <div class="timeline-header">
+              <h3 class="timeline-title">Active issues: {{ ticket_code }}</h3>
+              <div class="timeline-views">
+                <!-- View toggle buttons -->
+                <!-- SVG icons omitted for brevity -->
+              </div>
+            </div>
+            
+            <div class="timeline-table-container">
+              <table class="timeline-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Responder</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% if updates %}
+                    {% for update in updates %}
+                    <tr class="timeline-event">
+                      <td class="timeline-time">{{ update.timestamp|date:"g:i A" }}</td>
+                      <td class="timeline-title-cell">{{ update.title }}</td>
+                      <td class="timeline-date">{{ update.timestamp|date:"n/j" }}</td>
+                      <td class="timeline-status">
+                        <div class="status-icon completed"></div>
+                      </td>
+                      <td class="timeline-actions">
+                        <button class="timeline-action-button">
+                          <svg width="16" height="4" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 2C4 3.10457 3.10457 4 2 4C0.895431 4 0 3.10457 0 2C0 0.895431 0.895431 0 2 0C3.10457 0 4 0.895431 4 2Z" fill="#888888"/>
+                            <path d="M10 2C10 3.10457 9.10457 4 8 4C6.89543 4 6 3.10457 6 2C6 0.895431 6.89543 0 8 0C9.10457 0 10 0.895431 10 2Z" fill="#888888"/>
+                            <path d="M16 2C16 3.10457 15.1046 4 14 4C12.8954 4 12 3.10457 12 2C12 0.895431 12.8954 0 14 0C15.1046 0 16 0.895431 16 2Z" fill="#888888"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  {% else %}
+                    <tr class="none">
+                      <td colspan="5" class="no-updates">No updates available for this ticket.</td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

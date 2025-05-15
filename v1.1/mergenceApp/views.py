@@ -7,13 +7,72 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 from .models import EmergencyReport
+from .models import TimelineUpdate, EmergencyReport
+from django.shortcuts import get_object_or_404
 
 def home(request):
     return render(request, "homepage.html")
 
+def profile(request):
+    return render(request, "profile.html")
+
+def ticket(request):
+    ticket_code = request.GET.get('code')
+    updates = []
+
+    if ticket_code:
+        try:
+            report = EmergencyReport.objects.get(ticket_id=ticket_code)
+            updates = report.timeline_updates.order_by('-timestamp')  # newest first
+        except EmergencyReport.DoesNotExist:
+            report = None
+            updates = []
+
+    return render(request, 'ticket.html', {
+        'ticket_code': ticket_code,
+        'updates': updates,
+    })
+
+@login_required
+def admin_ticket(request):
+    ticket = None
+    timeline_entries = []
+
+    if request.method == 'GET':
+        ticket_id = request.GET.get('code')
+        if ticket_id:
+            try:
+                ticket = EmergencyReport.objects.get(ticket_id=ticket_id)
+                timeline_entries = ticket.timeline_updates.order_by('-timestamp')
+            except EmergencyReport.DoesNotExist:
+                ticket = None
+                timeline_entries = []
+
+    elif request.method == 'POST':
+        ticket_id = request.GET.get('code')
+        ticket = EmergencyReport.objects.get(ticket_id=ticket_id)
+
+        title = request.POST.get('title')
+        responder = request.POST.get('responder') or None  # optional
+
+        TimelineUpdate.objects.create(
+            report=ticket,
+            title=title,
+            responder=responder,
+        )
+
+        timeline_entries = ticket.timeline_updates.order_by('-timestamp')
+
+    return render(request, 'admin_ticket.html', {
+        'ticket': ticket,
+        'timeline_entries': timeline_entries,
+    })
+
+
 @login_required
 def dashboard(request):
     return render(request, "dashboard.html")
+
 
 def login(request):
     if request.method == 'POST':
@@ -74,7 +133,7 @@ def report(request):
     latest_ticket_id = None
 
     if request.method == 'POST':
-        report = EmergencyReport(
+        report_instance = EmergencyReport(
             user=request.user,
             name=request.POST['name'],
             surname=request.POST['surname'],
@@ -82,8 +141,15 @@ def report(request):
             hotline_category=request.POST['hotline_category'],
             hotline_detail=request.POST['hotline_detail'],
         )
-        report.save()
-        latest_ticket_id = report.ticket_id
+        report_instance.save()
+        latest_ticket_id = report_instance.ticket_id
+
+        TimelineUpdate.objects.create(
+            report=report_instance,
+            title="Report Created",
+            responder=None
+        )
+
         messages.success(request, 'Your emergency report has been submitted successfully!')
 
     return render(request, 'report.html', {

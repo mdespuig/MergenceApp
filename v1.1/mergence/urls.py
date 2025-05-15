@@ -32,5 +32,6 @@ urlpatterns = [
     path('report/', views.report, name='report'),
     path('profile/', views.profile, name='profile'),
     path('ticket/', views.ticket, name='ticket'),
+    path('admin_ticket/', views.admin_ticket, name='admin_ticket'),    
 ]
 

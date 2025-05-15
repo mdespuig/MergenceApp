@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mergence Admin Form</title>
+  <link rel="stylesheet" href="{% static 'css/admin_ticket.css' %}">
+</head>
+<body>
+  <div class="app-container">
+    <header class="admin-header">
+      <div class="header-left">
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="{% url 'report' %}" class="nav-link">Report</a></li>
+          <li><a href="#" class="nav-link">Become a Partner</a></li>
+          <li><a href="{% url 'ticket' %}" class="nav-link">Check Ticket</a></li>
+        </ul>
+      </nav>
+        <div class="profile">
+          <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+              <a href="{% url 'profile' %}">View Profile</a>
+              <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+      <h1 class="brand">Mergence</h1>
+      <p class="tagline">The Life you can count on</p>
+
+      <section class="tracking-section">
+        <h2>Tracking System</h2>
+        <form method="get" action="{% url 'admin_ticket' %}" class="tracking-form">
+          <input type="text" name="code" placeholder="MG-250001A" class="tracking-input" value="{{ ticket.ticket_id|default:'' }}">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </section>
+
+      <section class="new-issue">
+        <h2>Create New Emergency Issue</h2>
+        <form class="issue-form">
+          <div class="form-group">
+            <label for="issue-title" class="form-label">Issue Title</label>
+            <input type="text" id="issue-title" placeholder="Emergency Description">
+          </div>
+
+          <div class="form-group">
+            <label for="patient-name" class="form-label">Patient Name</label>
+            <input type="text" id="patient-name" placeholder="Enter Patient Name">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="location" class="form-label">Location</label>
+              <input type="text" id="location" placeholder="Emergency Location">
+            </div>
+            
+            <div class="form-group">
+              <label for="responder" class="form-label">Assigned Responder</label>
+              <input type="text" id="responder" placeholder="Medical Responder">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="details" class="form-label">Emergency Details</label>
+            <textarea id="details" placeholder="Detailed information about the emergency"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Emergency Issue</button>
+            <button type="button" class="btn btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      {% if ticket %}
+      <section class="active-issues">
+        <div class="issues-header">
+          <h2>Active issues: {{ ticket.ticket_id }}</h2>
+        </div>
+
+        <table class="issues-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Responder</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in timeline_entries %}
+            <tr>
+              <td>{{ entry.timestamp|time:"g:i A" }}</td>
+              <td>{{ entry.title }}</td>
+              <td>{{ entry.timestamp|date:"n/j" }}</td>
+              <td>👨‍⚕️</td>
+              <td>
+                <svg class="more-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11
+                           C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
+                        stroke="#828282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M19 13C19.5523 13 20 12.5523 20 12
+                           C20 11.4477 19.5523 11 19 11
+                           C18.4477 11 18 11.4477 18 12
+                           C18 12.5523 18.4477 13 19 13Z"
+                        stroke="#828282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 13C5.55228 13 6 12.5523 6 12
+                           C6 11.4477 5.55228 11 5 11
+                           C4.44772 11 4 11.4477 4 12
+                           C4 12.5523 4.44772 13 5 13Z"
+                        stroke="#828282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">No updates yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="update-section">
+          <h3>Add Status Update</h3>
+          <form method="POST" action="{% url 'admin_ticket' %}?code={{ ticket.ticket_id }}" class="update-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+              <input type="text" name="title" id="title" class="custom-input" placeholder="Enter update title" required>
+            </div>
+
+           <!--<div class="form-group">
+              <input type="text" name="responder" id="responder" class="custom-input" placeholder="Enter responder name (optional)">
+            </div>
+          -->
+          <div class="upbtn"><button type="submit" class="btn btn-update">Add Update</button></div>
+          </form>
+        </div>
+      </section>
+      {% endif %}
+    </main>
+
+    <footer class="admin-footer">
+      <!-- footer content here... -->
+    </footer>
+  </div>
+</body>
+</html>

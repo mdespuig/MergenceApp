@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mergence - Medical Tracking</title>
-    <link rel="stylesheet" href="{% static 'css/history.css' %}" />
+    <title>Mergence - Tracking</title>
+    <link rel="stylesheet" href="{% static 'css/ticket.css' %}" />
     <!-- Font imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,93 +19,39 @@
       <header class="header">
         <div class="header-left">
           <div class="header-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 16V7.5C21 7.10218 20.842 6.72064 20.5607 6.43934C20.2794 6.15804 19.8978 6 19.5 6H16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 16V7.5C3 7.10218 3.15804 6.72064 3.43934 6.43934C3.72064 6.15804 4.10218 6 4.5 6H7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M16.5 3.75C16.5 3.55109 16.421 3.36032 16.2803 3.21967C16.1397 3.07902 15.9489 3 15.75 3H8.25C8.05109 3 7.86032 3.07902 7.71967 3.21967C7.57902 3.36032 7.5 3.55109 7.5 3.75V8.25C7.5 8.44891 7.57902 8.63968 7.71967 8.78033C7.86032 8.92098 8.05109 9 8.25 9H15.75C15.9489 9 16.1397 8.92098 16.2803 8.78033C16.421 8.63968 16.5 8.44891 16.5 8.25V3.75Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3.75 16.5H20.25C20.4489 16.5 20.6397 16.579 20.7803 16.7197C20.921 16.8603 21 17.0511 21 17.25V18.75C21 18.9489 20.921 19.1397 20.7803 19.2803C20.6397 19.421 20.4489 19.5 20.25 19.5H3.75C3.55109 19.5 3.36032 19.421 3.21967 19.2803C3.07902 19.1397 3 18.9489 3 18.75V17.25C3 17.0511 3.07902 16.8603 3.21967 16.7197C3.36032 16.579 3.55109 16.5 3.75 16.5V16.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 16.5V19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7.5 16.5V19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M16.5 16.5V19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="header-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
           </div>
         </div>
         
         <div class="header-right">
           <nav class="main-nav">
-            <a href="#" class="nav-link">Report</a>
-            <a href="#" class="nav-link">Hotlines</a>
+            <a href="{% url 'report' %}" class="nav-link">Report</a>
             <a href="#" class="nav-link">Become a Partner</a>
-            <a href="#" class="nav-link">Track</a>
+            <a href="{% url 'ticket' %}" class="nav-link">Check Ticket</a>
           </nav>
           
-          <div class="profile">
-            <div class="profile-avatar">
-              <span>JD</span>
+        {% if user.is_authenticated %}          
+        <div class="profile">
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                <a href="{% url 'profile' %}">View Profile</a>
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
             </div>
-            <div class="profile-info">
-              <div class="profile-name">John Doe</div>
-              <div class="profile-role">Profile</div>
-            </div>
-          </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
         </div>
       </header>
       
-      <div class="main-content">
-        <div class="sidebar">
-          <div class="notification-card">
-            <div class="notification-header">
-              <div class="notification-icon-container">
-                <svg class="notification-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 4L12 12M4 12L12 4" stroke="#888888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div>
-                  <div class="notification-title">Emergency Notification</div>
-                  <div class="notification-message">Patient has been delivered to an emergency room</div>
-                </div>
-              </div>
-              <div class="notification-actions">
-                <span class="notification-time">1:50 PM</span>
-                <button class="notification-delete">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 4H14M4 4V12C4 13.1046 4.89543 14 6 14H10C11.1046 14 12 13.1046 12 12V4M6 4V3C6 2.44772 6.44772 2 7 2H9C9.55228 2 10 2.44772 10 3V4" stroke="#888888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div class="notification-footer">1:50 PM</div>
-          </div>
-
-          <div class="notification-card">
-            <div class="notification-header">
-              <div class="notification-icon-container">
-                <svg class="notification-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 4L12 12M4 12L12 4" stroke="#888888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div>
-                  <div class="notification-title">Emergency Notification</div>
-                  <div class="notification-message">Report Details Finalized</div>
-                </div>
-              </div>
-              <div class="notification-actions">
-                <span class="notification-time">1:51 PM</span>
-                <button class="notification-delete">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 4H14M4 4V12C4 13.1046 4.89543 14 6 14H10C11.1046 14 12 13.1046 12 12V4M6 4V3C6 2.44772 6.44772 2 7 2H9C9.55228 2 10 2.44772 10 3V4" stroke="#888888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div class="notification-footer">1:51 PM</div>
-          </div>
-        </div>
-        
+      <div class="main-content">        
         <div class="content">
           <div class="tracking-form">
             <h1 class="tracking-title">Mergence</h1>

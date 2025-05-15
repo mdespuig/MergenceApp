@@ -14,6 +14,9 @@ def home(request):
 def profile(request):
     return render(request, "profile.html")
 
+def ticket(request):
+    return render(request, "ticket.html")
+
 @login_required
 def dashboard(request):
     return render(request, "dashboard.html")

@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                <a href="#">View Profile</a>
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="bg">
+        <div class="hero">
+            <h1>Staff Dashboard</h1>
+        </div>
+        <div class="management-wrapper">
+            <div class="left-container">
+                <div class="left">
+                    <h2>Manage Partnership Applications</h2>
+                    <p>View and manage all partnership application requests.</p>
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'partner_requests' %}" class="btn-filled">Manage</a>
+                    {% else %}
+                        <a class="btn-filled disabled-button" title="You do not have the permission" onclick="return false;">Manage</a>
+                    {% endif %}
+                </div>
+                <div class="left">
+                    <h2>Manage Users</h2>
+                    <p>View and manage all users registered on the platform.</p>
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'manage_users' %}" class="btn-filled">Manage</a>
+                    {% else %}
+                        <a class="btn-filled disabled-button" title="You do not have the permission" onclick="return false;">Manage</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="right-container">
+                <div class="right">
+                    <h2>Manage Tracking System</h2>
+                    <p>View and manage tickets from emergency reports created by users.</p>
+                    <a href="{% url 'manage_tickets' %}" class="btn-filled">Manage</a>
+                </div>
+                <div class="right">
+                    <h2>Manage Hotlines</h2>
+                    <p>View and manage all hotlines available on the platform.</p>
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'manage_hotlines' %}" class="btn-filled">Manage</a>
+                    {% else %}
+                        <a class="btn-filled disabled-button" title="You do not have the permission" onclick="return false;">Manage</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+    <div>Contact Us<br/>mergence@mail.com</div>
+  </footer>
+</body>
+</html>

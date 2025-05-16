@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'report' %}">Report</a></li>
+                <li><a href="{% url 'become_partner' %}">Become a Partner</a></li>
+                <li><a href="{% url 'check_ticket' %}">Check Ticket</a></li>
+            </ul> 
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                <a href="#">View Profile</a>
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="bg">
+        <div class="hero">
+            <h1>Check Tickets</h1>
+            <p>Emergency Report Form</p>
+        </div>
+        <main class="admin-main">
+            <div class="tracking-section">
+                <h2>Tracking System</h2>
+                    <form method="get" action="{% url 'check_ticket' %}" class="tracking-form">
+                        <input type="text" name="code" placeholder="Enter Ticket ID" class="tracking-input" value="{{ ticket.ticket_id|default:'' }}">
+                        <button type="submit" class="submit_default">Submit</button>
+                    </form>
+                    <div id="toast-popup" class="toast-popup" style="display: none;">
+                        <p id="toast-message" style="color: green;"></p>
+                    </div>
+                </div>
+            {% if ticket %}
+                <script>
+                    window.ticketId = "{{ ticket.ticket_id }}";
+                </script>
+            {% endif %}
+            <div id="ticket-section" style="display: none;">
+                {% if ticket %}
+<section class="active-issues">
+    <div class="issues-header">
+        <h2>Active issues: {{ ticket.ticket_id }}</h2>
+    </div>
+    <table class="issues-table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Responder</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in timeline_entries %}
+            <tr>
+                <td>{{ entry.timestamp|time:"g:i A" }}</td>
+                <td>{{ entry.title }}</td>
+                <td>{{ entry.timestamp|date:"n/j" }}</td>
+                <td>{{ entry.organization_name }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No updates yet.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+            </div>
+        </main>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+        <div>Contact Us<br/>mergence@mail.com</div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'partner_requests' %}">Partnership Requests</a></li>
+                <li><a href="{% url 'manage_tickets' %}">Tracking System</a></li>
+                <li><a href="{% url 'manage_users' %}">Users</a></li>
+                <li><a href="{% url 'manage_hotlines' %}">Hotlines</a></li>
+            </ul> 
+        </div>
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                <a href="#">View Profile</a>
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="bg">
+        <div class="hero">
+            <h1>Manage Partnership Applications</h1>
+        </div>
+        <main>
+            <section class="controls">
+                <input type="text" id="searchInput" placeholder="Search organizations..." />
+            </section>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"/></th>
+                        <th>User</th>
+                        <th>Organization</th>
+                        <th>Address</th>
+                        <th>Hotline Number</th>
+                        <th>Hotline Type</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationTable">
+                {% for application in partner_applications %}
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="rowCheckbox" data-id="{{ application.id }}"></td>
+                        <td>{{ application.user.username }}</td>
+                        <td>{{ application.organization_name }}</td>
+                        <td>{{ application.address }}</td>
+                        <td>{{ application.hotline_number }}</td>
+                        <td>{{ application.get_hotline_category_display }}</td>
+                        <td>{{ application.date_submitted|date:"Y-m-d H:i" }}</td>
+                        <td><span class="status pending">{{ application.status|capfirst }}</span></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8">No partnership applications found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="actions">
+                <p id="selectionCount">0 of 0 selected</p>
+                <div class="action-buttons">
+                    <button onclick="clearSelection()" class="clear">Clear Selection</button>
+                    <button class="reject">Reject</button>
+                    <button class="approve">Approve</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+    <div>Contact Us<br/>mergence@mail.com</div>
+  </footer>
+</body>
+</html>

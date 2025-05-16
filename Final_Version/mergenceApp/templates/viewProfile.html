@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'report' %}">Report</a></li>
+                <li><a href="{% url 'become_partner' %}">Become a Partner</a></li>
+                <li><a href="{% url 'check_ticket' %}">Check Ticket</a></li>
+            </ul> 
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+    <div class="bg">
+        <div class="profile-container">
+            <h2>Setup Profile</h2>
+            {% if profile.profile_image %}
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="{{ profile.profile_image.url }}" alt="Profile Image" style="width: 250px; height: 250px; object-fit: cover; border-radius: 50%;">
+                </div>
+            {% else %}
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="{% static 'img/default_profile.png' %}" alt="Default Profile" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                </div>
+            {% endif %}
+            <form method="post" action="{% url 'view_profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="profile_image">Profile Picture</label>
+
+                    <div class="custom-file-upload">
+                        <label for="profile_image" class="upload-btn">Choose File</label>
+                        <span id="file-name">No file chosen</span>
+                        <input type="file" id="profile_image" name="profile_image" accept="image/*">
+                    </div>
+                </div>
+
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" placeholder="John" required>
+
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" placeholder="Doe" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="johndoe@mail.com" required>
+
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" value="{{ profile.address|default:'' }}" placeholder="Block 1A, Template Street, Villa Samples">
+
+                <label for="contact_number">Contact Number</label>
+                <input type="text" id="contact_number" name="contact_number" value="{{ profile.contact_number|default:'' }}" placeholder="09876543210">
+                <div class="form-buttons">
+                    <button class="btn-cancel" href="{% url 'view_profile' %}" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-filled">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+        <div>Contact Us<br/>mergence@mail.com</div>
+    </footer>
+    <script>
+        document.getElementById("profile_image").addEventListener("change", function() {
+            const fileName = this.files[0]?.name || "No file chosen";
+            document.getElementById("file-name").textContent = fileName;
+        });
+    </script>
+</body>
+</html>

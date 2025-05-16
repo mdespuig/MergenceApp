@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/messenger.css' %}">
+    <title>Chat with {{ chat_partner.username }}</title>
+</head>
+<body>
+    <nav style="background-color: white;">
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+    <div class="bg">
+        <div class="chat-container" style="position: relative;">
+            <a href="{% url 'messenger' %}" class="back-btn">&#8592;</a>
+            <h1 style="text-align: center;">Chat with {{ chat_partner.username }}</h1>
+            <div id="chat-log" class="chat-log"></div>
+            <div class="chat-input">
+                <input id="chat-message-input" type="text" autocomplete="off" placeholder="Type your message..." />
+                <button id="chat-message-send">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const senderUsername = "{{ current_user.username|escapejs }}";
+        const receiverUsername = "{{ chat_partner.username|escapejs }}";
+        const roomName = [senderUsername, receiverUsername].sort().join('_');
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const chatSocket = new WebSocket(
+            wsScheme + '://' + window.location.hostname + ':8000/ws/chat/' + roomName + '/'
+        );
+        chatSocket.onopen = function () {
+            console.log('WebSocket connection established.');
+        };
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const chatLog = document.getElementById('chat-log');
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `<b>${data.sender}:</b> ${data.message} <span class="timestamp">${data.timestamp}</span>`;
+            chatLog.appendChild(messageElement);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly.');
+        };
+        document.getElementById('chat-message-send').onclick = function () {
+            const input = document.getElementById('chat-message-input');
+            const message = input.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'sender': senderUsername,
+                    'receiver': receiverUsername
+                }));
+                input.value = '';
+            }
+        };
+        document.getElementById('chat-message-input').addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById('chat-message-send').click();
+            }
+        });
+    </script>
+</body>
+</html>

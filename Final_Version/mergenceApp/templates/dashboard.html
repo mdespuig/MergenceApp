@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'report' %}">Report</a></li>
+                <li><a href="{% url 'become_partner' %}">Become a Partner</a></li>
+                <li><a href="{% url 'check_ticket' %}">Check Ticket</a></li>
+            </ul> 
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="hero">
+        <h1>Mergence</h1>
+        <p>The Lifeline You Can Count On</p>
+    </div>
+
+    <div class="illustrations">
+        <img src="{% static 'img/image1.jpg' %}" alt="First illustration" width="500"/>
+        <img src="{% static 'img/image2.jpg' %}" alt="Second illustration" width="500"/>
+    </div>
+
+    <div class="hotlines">
+        <h2>Emergency Hotlines</h2>
+        <p class="desc">Naga City</p>
+        <div class="categories">
+            <div class="type">
+                <p class="title">Paramedics</p><br/>
+                <p class="desc">Hospitals</p>
+            </div>
+            <div class="type">
+                <p class="title">Fire & Rescue</p><br/>
+                <p class="desc">Fire & Rescue Stations</p>
+            </div>
+            <div class="type">
+                <p class="title">Law Enforcement</p><br/>
+                <p class="desc">Police Stations</p>
+            </div>
+            <div class="type">
+                <p class="title">Utility & Electrical</p><br/>
+                <p class="desc">Internet Service Providers<br/>Electric Distribution Offices<br/>Water Districts</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+        <div>Contact Us<br/>mergence@mail.com</div>
+    </footer>
+</body>
+</html>

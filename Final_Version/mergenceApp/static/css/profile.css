@@ -1,0 +1,138 @@
+.profile-container {
+    max-width: 600px;
+    background: #fff;
+    margin: 80px auto 40px;
+    padding: 40px 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.profile-container h2 {
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.profile-icon {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+}
+
+form label {
+    display: block;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+form input[type="text"],
+form input[type="email"] {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    color: #444;
+    transition: all 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus {
+    border-color: #1e1e1e;
+    outline: none;
+}
+
+form input[readonly] {
+    background: #eee;
+    cursor: not-allowed;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-buttons .btn-outline,
+.form-buttons .btn-filled {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e1e1e;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.form-buttons .btn-outline:hover,
+.form-buttons .btn-filled:hover {
+    background-color: #333;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #1e1e1e;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn-cancel:hover {
+    background-color: #f4f6fb;
+}
+
+.custom-file-upload {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.upload-btn {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #333;
+}
+
+#file-name {
+    font-size: 14px;
+    color: #555;
+}

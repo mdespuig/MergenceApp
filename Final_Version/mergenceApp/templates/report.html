@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'report' %}">Report</a></li>
+                <li><a href="{% url 'become_partner' %}">Become a Partner</a></li>
+                <li><a href="{% url 'check_ticket' %}">Check Ticket</a></li>
+            </ul> 
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="bg">
+        <div class="hero">
+            <h1>Mergence</h1>
+            <p>Emergency Report Form</p>
+        </div>
+        <div class="form-container">
+            <form action="{% url 'report' %}" method="post">
+                {% csrf_token %}
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+
+                <label for="contact-number">Contact Number</label>
+                <input type="tel" id="contact-number" name="contact_number" placeholder="Enter your contact number" required>
+
+                <label for="main-hotline">Hotlines</label>
+                <select id="main-hotline" name="hotline_category" required>
+                    <option value="" disabled selected>Choose a Hotline</option>
+                    <option value="paramedics">Paramedics</option>
+                    <option value="fire">Fire & Rescue</option>
+                    <option value="law">Law Enforcement</option>
+                    <option value="utility">Utility & Electrical</option>
+                </select>
+
+                {% for category, hotlines in grouped_hotlines.items %}
+                <div id="{{ category }}" class="hotline-sub" style="display:none;">
+                    <label for="{{ category }}-select">{{ category|title }}</label>
+                    <select id="{{ category }}-select" name="hotline_detail">
+                        <option value="" disabled selected>----------------------------------------</option>
+                    {% for hotline in hotlines %}
+                        <option value="{{ hotline.organization_name }}">{{ hotline.organization_name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn-filled">Submit</button>
+            </form>
+            {% if latest_ticket_id %}
+            <div id="popup" class="popup-overlay">
+                <div class="popup-box">
+                <h3>Report Submitted</h3>
+                <p>Your Ticket ID is: <strong>{{ latest_ticket_id }}</strong></p>
+                <p class="success-message">Your emergency report has been submitted successfully!</p>
+                <button onclick="closePopup()">Close</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+        <div>Contact Us<br/>mergence@mail.com</div>
+    </footer>
+</body>
+</html>

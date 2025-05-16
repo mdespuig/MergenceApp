@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/deleteHotlines.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+        <div class="navbar">
+            <ul>
+                <li><a href="{% url 'partner_requests' %}">Partnership Requests</a></li>
+                <li><a href="{% url 'manage_tickets' %}">Tracking System</a></li>
+                <li><a href="{% url 'manage_users' %}">Users</a></li>
+                <li><a href="{% url 'manage_hotlines' %}">Hotlines</a></li>
+            </ul> 
+        </div>
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="bg">
+        <div class="hero">
+            <h1>Manage Hotlines</h1>
+        </div>
+        <div class="layout">
+            <section class="hotline-form">
+                <h2>Add New Hotline</h2>
+                <form method="post" action="{% url 'manage_hotlines' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <input type="text" name="organization_name" placeholder="Organization Name" required />
+                        <select name="hotline_type" required>
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="paramedics">Paramedics</option>
+                            <option value="fire">Fire & Rescue</option>
+                            <option value="law">Law Enforcement</option>
+                            <option value="utility">Utility & Electrical</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <input type="email" name="email" placeholder="Email" required />
+                        <input type="text" name="address" placeholder="Address" required />
+                    </div>
+                    <div class="form-row">
+                        <input type="text" name="hotline_number" placeholder="Hotline Number" required />
+                        <input type="text" name="username" placeholder="Username" />
+                    </div>
+                    <button type="submit" class="submit-btn">Add Hotline</button>
+                </form>
+                <div id="toast" class="toast hidden"></div>
+                {% if username_error %}
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const toast = document.getElementById('toast');
+                            toast.textContent = "{{ username_error }}";
+                            toast.classList.remove('hidden');
+                            toast.classList.add('show');
+
+                            setTimeout(() => {
+                                toast.classList.remove('show');
+                                toast.classList.add('hidden');
+                            }, 4000);
+                        });
+                    </script>
+                {% endif %}
+            </section>
+            <main class="main-content">
+                <section class="controls">
+                    <input type="text" id="searchInput" placeholder="Search hotlines..." />
+                </section>
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"/></th>
+                            <th>Hotline ID</th>
+                            <th>Institution/Organization Name</th>
+                            <th>Hotline Type</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Hotline Number</th>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hotline in hotlines %}
+                        <tr>
+                            <td><input type="checkbox" class="rowCheckbox" data-id="{{ hotline.id }}"></td>
+                            <td>{{ hotline.id }}</td>
+                            <td>{{ hotline.organization_name }}</td>
+                            <td>{{ hotline.hotline_type }}</td>
+                            <td>{{ hotline.email }}</td>
+                            <td>{{ hotline.address }}</td>
+                            <td>{{ hotline.hotline_number }}</td>
+                            <td>{{ hotline.user.username }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="8">No hotlines found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="actions">
+                    <p id="selectionCount">0 of 0 selected</p>
+                    <div class="action-buttons">
+                        <button class="clear" onclick="clearSelection()">Clear Selection</button>
+                        <button class="hotlineDelete">Delete</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <div class="socials">
+            <span>🅱</span>
+            <a href="#">✉️</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">🔗</a>
+        </div>
+    <div>Contact Us<br/>mergence@mail.com</div>
+  </footer>
+</body>
+</html>

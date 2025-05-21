@@ -88,9 +88,11 @@ WSGI_APPLICATION = 'mergence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME' : 'Mergence',
-        'USER' : 'admin',
-        'PASSWORD' : '123',
+        'HOST': os.getenv('PGHOST', 'shinkansen.proxy.rlwy.net'),
+        'PORT': os.getenv('PGPORT', '25451'),
+        'NAME': os.getenv('PGDATABASE', 'railway'),
+        'USER': os.getenv('PGUSER', 'postgres'),
+        'PASSWORD': os.getenv('PGPASSWORD', ''),
     }
 }
 

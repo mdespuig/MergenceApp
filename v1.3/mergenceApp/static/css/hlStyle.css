@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    color: #222;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
+    border-bottom: 1px solid #eee;
+}
+nav .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+nav ul {
+    display: flex;
+    margin-left: 8em;
+    list-style: none;
+    gap: 1.5em;
+    font-weight: bold;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #222;
+}
+.buttons a {
+    margin-left: 1em;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+.btn-outline {
+    border: 1px solid #767676;
+    background: #E3E3E3;
+    color: black;
+}
+.btn-filled {
+    background: #1e1e1e;
+    color: white;
+}
+
+.hotlines {
+    text-align: left;
+    padding: 2em;
+}
+.hotlines h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+.hotlines .categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10em;
+    margin-top: 3em;
+}
+.hotlines .title {
+    font-size: 25px;
+    margin: 0;
+}
+
+.type {
+    font-weight: bold;
+    text-align: left;
+}
+
+.desc {
+    font-weight: normal;
+    color: #757575;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: lightslategray;
+}
+
+footer {
+    padding: 2em;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+}
+footer .socials {
+    display: flex;
+    gap: 1em;
+}

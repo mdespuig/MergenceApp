@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/hpStyle.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="{% static 'js/messenger.js' %}"></script>
+    <title>Mergence</title>
+</head>
+<body>
+    <nav stlye="background-color: white;">
+        <a href="{% url 'dashboard' %}"><div class="logo" style="font-size: 40px">[M]</div></a>
+    
+        {% if user.is_authenticated %}
+        <div class="profile-dropdown">
+            <button class="profile-btn">{{ user.username }} ▾</button>
+            <div class="dropdown-content">
+                {% if not user.is_superuser %}
+                    <a href="{% url 'view_profile' %}">View Profile</a>
+                    <a href="{% url 'messenger' %}">Messenger</a>
+                {% endif %}
+                <form method="post" action="{% url 'logout_user' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-outline">Sign in</a>
+            <a href="{% url 'registration' %}" class="btn-filled">Register</a>
+        </div>
+        {% endif %}
+    </nav>
+    <div class="bg" style="height: 54em">
+        <div class="hero">
+        <h1>Mergence: Messenger</h1>
+    
+        <div class="user-list">
+            <h2>Choose a user to chat with:</h2>
+            <ul>
+            {% for user in users %}
+                {% if not user.is_superuser %}
+                <li><a href="{% url 'private_chat' user.username %}">{{ user.username }}</a></li>
+                {% endif %}
+            {% empty %}
+                <li>No users available.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+* {
+    font-family: Inter, sans-serif;
+}
+body {
+    margin: 0;
+    background: #ffffff;
+    color: black;
+}
+h2, p{
+    margin: 0;
+}
+.container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+  
+.title {
+    font-size: 5em;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+  
+.tagline {
+    font-size: 29px;
+    margin-bottom: 2rem;
+}
+  
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+  
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+    font-weight: 450;
+}
+  
+.black-btn {
+    background: black;
+    color: white;
+    margin-top: 30px;
+}
+
+.submit {
+    width: 100%;
+}
+  
+.black-btn:hover {
+    background: #111;
+}
+  
+.googleButton {
+    background: #EEEEEE;
+}
+  
+.googleButton:hover {
+    background: #f3f3f3;
+}
+  
+.fbButton {
+    background: #1877f2;
+    color: #fff;
+}
+  
+.fbButton:hover {
+    background: #145dc2;
+}
+  
+.icon {
+    width: 20px;
+    height: 20px;
+}
+  
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #828282;
+    font-size: 0.9rem;
+}
+  
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+    margin: 0 10px;
+}
+  
+.terms {
+    font-size: 0.75rem;
+    color: #828282;
+    margin-top: 1rem;
+}
+  
+.terms span {
+    color: black;
+    font-weight: 500;
+    text-decoration: underline;
+}
+.terms a {
+    color: black;
+    font-weight: 500;
+}
+
+a {
+    text-decoration: none;
+}
+
+form p {
+    text-align: left;
+    font-weight: 500;
+    margin-top: 10px;
+}
+form input {
+    margin: 0;
+}

@@ -6,3 +6,5 @@ Cabañes, Anthony Jordan C.
 Despuig, Matthew Leon S.
 Martinez, James Lance P.
 Paronda, Sean Paolo V.
+
+v1.3 was used for the deployment of the web application.
